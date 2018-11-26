@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd"
+	default-lazy-init="true">
+
+	<description>Spring Configuration</description>
+	
+	    <!-- 第一个定时任务  -->
+        <bean name="job1" class="com.hiya.ee.scheduling.quarzt.HiyaSpringJob1"/>  
+        <bean id="jobDetail_1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+            <property name="targetObject">  
+                <ref bean="job1" />  
+            </property>  
+            <property name="targetMethod">  
+                <value>execute</value>  
+            </property>  
+        </bean>  
+        <bean id="cronTrigger_1" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+            <property name="jobDetail">  
+                <ref bean="jobDetail_1" />  
+            </property>  
+            <property name="cronExpression">  
+                <value>0/1 * * * * ?</value>  
+            </property>  
+        </bean>  
+        
+        
+         <!-- 第二个定时任务  -->
+        <bean name="job2" class="com.hiya.ee.scheduling.quarzt.HiyaSpringJob2"/>  
+        <bean id="jobDetail_2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+            <property name="targetObject">  
+                <ref bean="job2" />  
+            </property>  
+            <property name="targetMethod">  
+                <value>execute</value>  
+            </property>  
+        </bean>  
+        <bean id="cronTrigger_2" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+            <property name="jobDetail">  
+                <ref bean="jobDetail_2" />  
+            </property>  
+            <property name="cronExpression">  
+                <value>0/1 * * * * ?</value>  
+            </property>  
+        </bean>  
+          
+          
+        <!-- 总体配置  -->
+        <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+            <property name="triggers">  
+                <list>  
+                    <ref bean="cronTrigger_1" />  
+                    <ref bean="cronTrigger_2" />  
+                </list>  
+            </property>  
+        </bean>  
+</beans>
